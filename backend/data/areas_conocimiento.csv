@@ -1,0 +1,31 @@
+id_area,nombre_area,descripcion_area,categoria_general
+1,Administración y Gestión Empresarial,Programas relacionados con administración de empresas y gestión organizacional,Economía administración contaduría y afines
+2,Finanzas y Contabilidad,Programas de contabilidad financiera y gestión financiera,Economía administración contaduría y afines
+3,Mercadeo y Ventas,Programas de marketing comercial y estrategias de ventas,VENTAS Y SERVICIOS
+4,Turismo y Hotelería,Programas de gestión turística y servicios hoteleros,VENTAS Y SERVICIOS
+5,Gastronomía y Cocina,Programas de artes culinarias y preparación de alimentos,VENTAS Y SERVICIOS
+6,Belleza y Estética,Programas de cosmetología peluquería y cuidado personal,VENTAS Y SERVICIOS
+7,Atención al Cliente y Servicios,Programas de servicio al cliente y atención comercial,VENTAS Y SERVICIOS
+8,Sistemas e Informática,Programas de desarrollo de software y tecnologías de información,Ingeniería arquitectura urbanismo y afines
+9,Redes y Telecomunicaciones,Programas de infraestructura tecnológica y comunicaciones,Ingeniería arquitectura urbanismo y afines
+10,Ingeniería Civil y Construcción,Programas de construcción arquitectura e ingeniería civil,Ingeniería arquitectura urbanismo y afines
+11,Ingeniería Industrial y Procesos,Programas de optimización de procesos industriales,Ingeniería arquitectura urbanismo y afines
+12,Electrónica y Automatización,Programas de sistemas electrónicos y control automático,Ingeniería arquitectura urbanismo y afines
+13,Enfermería y Auxiliares de Salud,Programas de atención médica y cuidado de pacientes,Ciencias de la salud
+14,Salud Pública y Comunitaria,Programas de promoción y prevención en salud,Ciencias de la salud
+15,Farmacia y Servicios Farmacéuticos,Programas relacionados con medicamentos y atención farmacéutica,Ciencias de la salud
+16,Educación y Pedagogía,Programas de formación docente y metodologías educativas,Ciencias de la educación
+17,Primera Infancia y Cuidado Infantil,Programas especializados en atención a la primera infancia,Ciencias de la educación
+18,Psicología y Trabajo Social,Programas de intervención social y apoyo psicológico,Ciencias sociales y humanas
+19,Seguridad y Protección,Programas de seguridad industrial y protección ciudadana,Ciencias sociales y humanas
+20,Arte y Cultura,Programas de expresión artística y manifestaciones culturales,Bellas artes
+21,Música y Artes Escénicas,Programas de formación musical y artes performativas,Bellas artes
+22,Diseño Gráfico y Multimedia,Programas de diseño visual y comunicación gráfica,Bellas artes
+23,Agricultura y Ganadería,Programas de producción agropecuaria y desarrollo rural,Agronomía veterinaria y afines
+24,Medio Ambiente y Sostenibilidad,Programas de gestión ambiental y desarrollo sostenible,Matemáticas y ciencias naturales
+25,Logística y Transporte,Programas de cadena de suministro y gestión logística,OFICIOS OPERACIÓN DE EQUIPO Y TRANSPORTE
+26,Mecánica Automotriz,Programas de reparación y mantenimiento de vehículos,OFICIOS OPERACIÓN DE EQUIPO Y TRANSPORTE
+27,Oficios Técnicos Especializados,Programas de oficios técnicos y operación de equipos,OFICIOS OPERACIÓN DE EQUIPO Y TRANSPORTE
+28,Idiomas y Comunicación,Programas de lenguas extranjeras y comunicación,No especificada
+29,Emprendimiento y Negocios,Programas de creación de empresas y desarrollo de negocios,Economía administración contaduría y afines
+30,Calidad y Procesos,Programas de gestión de calidad y mejoramiento de procesos,CIENCIAS NATURALES APLICADAS Y RELACIONADAS

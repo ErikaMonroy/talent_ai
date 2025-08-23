@@ -1,0 +1,111 @@
+id,competencia,descripcion,dimension_id,categoria,nivel_complejidad
+1,Resolución de problemas matemáticos,Capacidad para resolver problemas complejos usando razonamiento matemático,1,Matemáticas,Alto
+2,Análisis algebraico,Habilidad para manipular y resolver ecuaciones algebraicas,1,Matemáticas,Medio
+3,Geometría espacial,Comprensión de relaciones espaciales y formas geométricas,1,Matemáticas,Medio
+4,Estadística descriptiva,Análisis e interpretación de datos estadísticos,1,Matemáticas,Medio
+5,Cálculo diferencial,Aplicación de conceptos de derivadas e integrales,1,Matemáticas,Alto
+6,Lógica proposicional,Razonamiento usando proposiciones lógicas,1,Lógica,Alto
+7,Razonamiento deductivo,Capacidad de llegar a conclusiones específicas desde premisas generales,1,Lógica,Alto
+8,Razonamiento inductivo,Habilidad para generalizar patrones desde casos específicos,1,Lógica,Alto
+9,Pensamiento analítico,Descomposición de problemas complejos en partes manejables,1,Análisis,Alto
+10,Reconocimiento de patrones,Identificación de regularidades en datos o situaciones,1,Análisis,Medio
+11,Comprensión lectora avanzada,Interpretación profunda de textos complejos,2,Lectura,Alto
+12,Análisis textual,Evaluación crítica de argumentos y estructura textual,2,Lectura,Alto
+13,Síntesis de información,Combinación coherente de múltiples fuentes de información,2,Lectura,Alto
+14,Vocabulario técnico,Dominio de terminología especializada,2,Vocabulario,Medio
+15,Comprensión contextual,Interpretación de significados según el contexto,2,Comprensión,Medio
+16,Escritura argumentativa,Construcción de argumentos sólidos por escrito,2,Escritura,Alto
+17,Redacción técnica,Comunicación clara de información especializada,2,Escritura,Alto
+18,Comunicación oral efectiva,Transmisión clara de ideas de forma verbal,2,Comunicación,Alto
+19,Presentación pública,Habilidad para presentar ante audiencias,2,Comunicación,Alto
+20,Escucha activa,Comprensión profunda de mensajes verbales y no verbales,2,Comunicación,Medio
+21,Método científico,Aplicación sistemática del proceso de investigación,3,Investigación,Alto
+22,Diseño experimental,Planificación de experimentos controlados,3,Investigación,Alto
+23,Análisis de datos científicos,Interpretación de resultados experimentales,3,Investigación,Alto
+24,Formulación de hipótesis,Creación de predicciones testables,3,Investigación,Medio
+25,Observación sistemática,Registro detallado y objetivo de fenómenos,3,Investigación,Medio
+26,Química orgánica,Comprensión de compuestos basados en carbono,3,Química,Alto
+27,Física mecánica,Análisis de movimiento y fuerzas,3,Física,Alto
+28,Biología molecular,Estudio de procesos biológicos a nivel molecular,3,Biología,Alto
+29,Ecología sistémica,Comprensión de ecosistemas y sus interacciones,3,Biología,Alto
+30,Astronomía básica,Conocimiento de cuerpos celestes y fenómenos espaciales,3,Astronomía,Medio
+31,Historia contemporánea,Análisis de eventos históricos recientes,4,Historia,Medio
+32,Geografía política,Comprensión de fronteras y sistemas políticos,4,Geografía,Medio
+33,Economía básica,Principios fundamentales de sistemas económicos,4,Economía,Medio
+34,Sociología urbana,Análisis de dinámicas sociales en ciudades,4,Sociología,Alto
+35,Antropología cultural,Estudio de diversidad cultural humana,4,Antropología,Alto
+36,Filosofía ética,Análisis de principios morales y éticos,4,Filosofía,Alto
+37,Ciencias políticas,Comprensión de sistemas y procesos políticos,4,Política,Alto
+38,Psicología social,Estudio del comportamiento en grupos,4,Psicología,Alto
+39,Derecho constitucional,Conocimiento de principios legales fundamentales,4,Derecho,Alto
+40,Relaciones internacionales,Análisis de dinámicas entre países,4,Relaciones,Alto
+41,Pensamiento divergente,Generación de múltiples soluciones creativas,5,Creatividad,Alto
+42,Innovación tecnológica,Desarrollo de nuevas aplicaciones tecnológicas,5,Innovación,Alto
+43,Diseño conceptual,Creación de ideas y conceptos originales,5,Diseño,Alto
+44,Arte visual,Expresión creativa a través de medios visuales,5,Arte,Medio
+45,Música y composición,Creación y interpretación musical,5,Música,Medio
+46,Escritura creativa,Producción de textos literarios originales,5,Literatura,Alto
+47,Improvisación,Adaptación creativa en situaciones imprevistas,5,Adaptación,Alto
+48,Brainstorming efectivo,Generación colaborativa de ideas,5,Colaboración,Medio
+49,Prototipado rápido,Desarrollo ágil de modelos y prototipos,5,Desarrollo,Alto
+50,Pensamiento lateral,Enfoque no convencional para resolver problemas,5,Pensamiento,Alto
+51,Liderazgo transformacional,Inspiración y motivación de equipos hacia objetivos,6,Liderazgo,Alto
+52,Gestión de conflictos,Resolución constructiva de disputas,6,Gestión,Alto
+53,Comunicación interpersonal,Interacción efectiva con individuos,6,Comunicación,Alto
+54,Trabajo colaborativo,Contribución efectiva en equipos multidisciplinarios,6,Colaboración,Alto
+55,Delegación efectiva,Asignación apropiada de responsabilidades,6,Gestión,Alto
+56,Motivación de equipos,Inspiración del rendimiento grupal,6,Motivación,Alto
+57,Negociación estratégica,Alcance de acuerdos beneficiosos,6,Negociación,Alto
+58,Construcción de consenso,Facilitación de acuerdos grupales,6,Facilitación,Alto
+59,Mentoring y coaching,Desarrollo de capacidades en otros,6,Desarrollo,Alto
+60,Gestión de diversidad,Aprovechamiento de diferencias en equipos,6,Diversidad,Alto
+61,Análisis crítico,Evaluación objetiva de información y argumentos,7,Análisis,Alto
+62,Evaluación de evidencias,Valoración de la calidad de pruebas y datos,7,Evaluación,Alto
+63,Detección de sesgos,Identificación de prejuicios en razonamiento,7,Detección,Alto
+64,Argumentación lógica,Construcción de razonamientos válidos,7,Argumentación,Alto
+65,Cuestionamiento sistemático,Formulación de preguntas pertinentes,7,Cuestionamiento,Alto
+66,Síntesis crítica,Integración evaluativa de múltiples perspectivas,7,Síntesis,Alto
+67,Metacognición,Reflexión sobre los propios procesos de pensamiento,7,Metacognición,Alto
+68,Toma de decisiones,Selección óptima entre alternativas,7,Decisiones,Alto
+69,Resolución de dilemas,Manejo de situaciones con múltiples consideraciones éticas,7,Dilemas,Alto
+70,Pensamiento sistémico,Comprensión de interrelaciones complejas,7,Sistemas,Alto
+71,Flexibilidad cognitiva,Adaptación mental a nuevas situaciones,8,Flexibilidad,Alto
+72,Aprendizaje autónomo,Capacidad de adquirir conocimientos independientemente,8,Aprendizaje,Alto
+73,Gestión del cambio,Adaptación efectiva a transformaciones,8,Cambio,Alto
+74,Resiliencia académica,Recuperación ante dificultades de aprendizaje,8,Resiliencia,Alto
+75,Curiosidad intelectual,Motivación intrínseca por el conocimiento,8,Curiosidad,Medio
+76,Autoregulación,Control consciente del propio comportamiento,8,Autocontrol,Alto
+77,Tolerancia a la ambigüedad,Comodidad con situaciones inciertas,8,Tolerancia,Alto
+78,Actualización continua,Mantenimiento de conocimientos actualizados,8,Actualización,Alto
+79,Transferencia de aprendizaje,Aplicación de conocimientos en nuevos contextos,8,Transferencia,Alto
+80,Metacognición de aprendizaje,Conciencia sobre los propios procesos de aprendizaje,8,Metacognición,Alto
+81,Programación básica,Desarrollo de algoritmos y código,1,Tecnología,Medio
+82,Análisis de sistemas,Comprensión de arquitecturas complejas,1,Sistemas,Alto
+83,Modelado matemático,Representación matemática de fenómenos reales,1,Modelado,Alto
+84,Optimización,Búsqueda de soluciones óptimas,1,Optimización,Alto
+85,Traducción e interpretación,Comunicación entre idiomas,2,Idiomas,Alto
+86,Comunicación intercultural,Interacción efectiva entre culturas,2,Cultura,Alto
+87,Periodismo investigativo,Investigación y comunicación de noticias,2,Periodismo,Alto
+88,Edición y corrección,Mejoramiento de textos escritos,2,Edición,Medio
+89,Investigación médica,Estudio de enfermedades y tratamientos,3,Medicina,Alto
+90,Ingeniería biomédica,Aplicación de ingeniería a problemas médicos,3,Ingeniería,Alto
+91,Biotecnología,Aplicación de organismos vivos en tecnología,3,Biotecnología,Alto
+92,Ciencias ambientales,Estudio de problemas ambientales,3,Ambiente,Alto
+93,Política pública,Desarrollo de políticas gubernamentales,4,Política,Alto
+94,Trabajo social,Intervención en problemas sociales,4,Social,Alto
+95,Criminología,Estudio del crimen y comportamiento criminal,4,Criminología,Alto
+96,Diplomacia,Negociación en relaciones internacionales,4,Diplomacia,Alto
+97,Emprendimiento,Creación y gestión de nuevos negocios,5,Negocios,Alto
+98,Marketing creativo,Promoción innovadora de productos/servicios,5,Marketing,Alto
+99,Diseño de experiencia,Creación de experiencias de usuario,5,Experiencia,Alto
+100,Arquitectura sostenible,Diseño de edificaciones ecológicas,5,Arquitectura,Alto
+101,Gestión de proyectos,Planificación y ejecución de proyectos complejos,6,Gestión,Alto
+102,Recursos humanos,Gestión del talento organizacional,6,RRHH,Alto
+103,Consultoría estratégica,Asesoramiento en decisiones organizacionales,6,Consultoría,Alto
+104,Auditoría y control,Evaluación de procesos y cumplimiento,7,Auditoría,Alto
+105,Investigación de mercados,Análisis de tendencias y comportamiento del consumidor,7,Investigación,Alto
+106,Educación adaptativa,Enseñanza personalizada según necesidades,8,Educación,Alto
+107,Psicología educativa,Aplicación de principios psicológicos en educación,8,Psicología,Alto
+108,Tecnología educativa,Integración de tecnología en procesos educativos,8,Tecnología,Alto
+109,Desarrollo organizacional,Mejoramiento de estructuras y procesos organizacionales,8,Desarrollo,Alto
+110,Gestión del conocimiento,Captura y distribución de conocimiento organizacional,8,Conocimiento,Alto
