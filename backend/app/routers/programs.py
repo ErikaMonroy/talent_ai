@@ -4,12 +4,118 @@ from sqlalchemy import and_, or_, func
 from typing import List, Optional, Dict, Any
 import logging
 from datetime import datetime
+from pydantic import Field
 
 from app.database.connection import get_db
 from app.database.models import Prediction, AcademicProgram, KnowledgeArea, ProgramArea
+from app.schemas.schemas import KnowledgeArea as KnowledgeAreaSchema, BaseSchema
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
+
+# Response schemas for all endpoints
+class PaginationInfo(BaseSchema):
+    """Pagination information schema"""
+    total: int = Field(..., description="Total number of items")
+    limit: int = Field(..., description="Items per page")
+    offset: int = Field(..., description="Items skipped")
+    has_more: bool = Field(..., description="Whether there are more items")
+    current_page: int = Field(..., description="Current page number")
+    total_pages: int = Field(..., description="Total number of pages")
+
+class KnowledgeAreaInfo(BaseSchema):
+    """Knowledge area information schema"""
+    id: Optional[int] = Field(None, description="Knowledge area ID")
+    name: Optional[str] = Field(None, description="Knowledge area name")
+    description: Optional[str] = Field(None, description="Knowledge area description")
+    code: Optional[str] = Field(None, description="Knowledge area code")
+
+class ProgramInfo(BaseSchema):
+    """Academic program information schema"""
+    id: int = Field(..., description="Program unique identifier")
+    name: str = Field(..., description="Program name")
+    institution: Optional[str] = Field(None, description="Institution offering the program")
+    academic_level: Optional[str] = Field(None, description="Academic level (e.g., Pregrado, Posgrado)")
+    modality: Optional[str] = Field(None, description="Study modality (e.g., Presencial, Virtual)")
+    duration: Optional[str] = Field(None, description="Program duration")
+    city: Optional[str] = Field(None, description="City where program is offered")
+    department: Optional[str] = Field(None, description="Department/state where program is offered")
+    country: Optional[str] = Field(None, description="Country where program is offered")
+    description: Optional[str] = Field(None, description="Program description")
+    requirements: Optional[str] = Field(None, description="Program requirements")
+    website: Optional[str] = Field(None, description="Program website URL")
+    is_active: bool = Field(..., description="Whether the program is currently active")
+    created_at: Optional[str] = Field(None, description="Program creation timestamp (ISO format)")
+    updated_at: Optional[str] = Field(None, description="Program last update timestamp (ISO format)")
+    knowledge_area: Optional[KnowledgeAreaInfo] = Field(None, description="Associated knowledge area")
+
+class FiltersApplied(BaseSchema):
+    """Applied filters information schema"""
+    area_id: Optional[int] = Field(None, description="Knowledge area ID filter")
+    city: Optional[str] = Field(None, description="City filter")
+    department: Optional[str] = Field(None, description="Department filter")
+    academic_level: Optional[str] = Field(None, description="Academic level filter")
+    name: Optional[str] = Field(None, description="Name search filter")
+
+class ProgramSearchResponse(BaseSchema):
+    """Response schema for program search endpoint"""
+    programs: List[ProgramInfo] = Field(..., description="List of matching academic programs")
+    pagination: PaginationInfo = Field(..., description="Pagination information")
+    filters_applied: FiltersApplied = Field(..., description="Filters that were applied to the search")
+
+class PredictionInfo(BaseSchema):
+    """Prediction information schema"""
+    id: int = Field(..., description="Prediction unique identifier")
+    user_email: str = Field(..., description="Email of the user who made the prediction")
+    predictions: Dict[str, Any] = Field(..., description="Prediction results data")
+    model_type: Optional[str] = Field(None, description="Type of ML model used")
+    model_version: Optional[str] = Field(None, description="Version of the ML model")
+    processing_time: Optional[float] = Field(None, description="Time taken to process prediction (seconds)")
+    confidence_score: Optional[float] = Field(None, description="Confidence score of the prediction")
+    created_at: Optional[str] = Field(None, description="Prediction creation timestamp (ISO format)")
+    input_data: Optional[Dict[str, Any]] = Field(None, description="Input data used for prediction")
+
+class PredictionStatistics(BaseSchema):
+    """Prediction statistics schema"""
+    total_predictions: int = Field(..., description="Total number of predictions for the user")
+    latest_prediction_date: Optional[str] = Field(None, description="Date of the most recent prediction (ISO format)")
+    models_used: List[str] = Field(..., description="List of model types used in predictions")
+    average_confidence: float = Field(..., description="Average confidence score across all predictions")
+
+class PredictionHistoryResponse(BaseSchema):
+    """Response schema for prediction history endpoint"""
+    user_email: str = Field(..., description="Email of the user")
+    predictions: List[PredictionInfo] = Field(..., description="List of user predictions")
+    pagination: PaginationInfo = Field(..., description="Pagination information")
+    statistics: PredictionStatistics = Field(..., description="Statistical information about user predictions")
+    message: Optional[str] = Field(None, description="Additional message (e.g., when no predictions found)")
+
+class FilterCounts(BaseSchema):
+    """Filter counts information schema"""
+    cities: int = Field(..., description="Number of unique cities available")
+    departments: int = Field(..., description="Number of unique departments available")
+    academic_levels: int = Field(..., description="Number of unique academic levels available")
+    knowledge_areas: int = Field(..., description="Number of knowledge areas available")
+
+class SimpleKnowledgeArea(BaseSchema):
+    """Simplified knowledge area schema for filters"""
+    id: int = Field(..., description="Knowledge area ID")
+    name: str = Field(..., description="Knowledge area name")
+    code: Optional[str] = Field(None, description="Knowledge area code")
+
+class FiltersResponse(BaseSchema):
+    """Response schema for available filters endpoint"""
+    cities: List[str] = Field(..., description="List of available cities (limited to first 100)")
+    departments: List[str] = Field(..., description="List of available departments")
+    academic_levels: List[str] = Field(..., description="List of available academic levels")
+    knowledge_areas: List[SimpleKnowledgeArea] = Field(..., description="List of available knowledge areas")
+    total_programs: int = Field(..., description="Total number of active programs")
+    filter_counts: FilterCounts = Field(..., description="Count of items in each filter category")
+
+class KnowledgeAreasResponse(BaseSchema):
+    """Response schema for knowledge areas endpoint"""
+    areas: List[KnowledgeAreaSchema] = Field(..., description="List of knowledge areas")
+    pagination: PaginationInfo = Field(..., description="Pagination information")
 
 # Response Models
 def format_program_response(program: AcademicProgram, area: Optional[KnowledgeArea] = None) -> Dict[str, Any]:
@@ -52,7 +158,7 @@ def format_prediction_response(prediction: Prediction) -> Dict[str, Any]:
         "input_data": prediction.input_data
     }
 
-@router.get("/programs/search")
+@router.get("/programs/search", response_model=ProgramSearchResponse)
 async def search_programs_advanced(
     area_id: Optional[int] = Query(None, description="Filter by knowledge area ID"),
     city: Optional[str] = Query(None, description="Filter by city"),
@@ -62,7 +168,7 @@ async def search_programs_advanced(
     limit: int = Query(50, description="Number of results per page", ge=1, le=100),
     offset: int = Query(0, description="Number of results to skip", ge=0),
     db: Session = Depends(get_db)
-):
+) -> ProgramSearchResponse:
     """
     Advanced program search with multiple optional filters and pagination.
     Supports filtering by area_id, location (city, department), academic_level, and name similarity.
@@ -114,24 +220,33 @@ async def search_programs_advanced(
             
             programs_list.append(format_program_response(program, primary_area))
         
-        return {
-            "programs": programs_list,
-            "pagination": {
-                "total": total_count,
-                "limit": limit,
-                "offset": offset,
-                "has_more": (offset + limit) < total_count,
-                "current_page": (offset // limit) + 1,
-                "total_pages": (total_count + limit - 1) // limit
-            },
-            "filters_applied": {
-                "area_id": area_id,
-                "city": city,
-                "department": department,
-                "academic_level": academic_level,
-                "name": name
-            }
-        }
+        # Convert programs to ProgramInfo objects
+        programs_info = [ProgramInfo(**program) for program in programs_list]
+        
+        # Create pagination info
+        pagination_info = PaginationInfo(
+            total=total_count,
+            limit=limit,
+            offset=offset,
+            has_more=(offset + limit) < total_count,
+            current_page=(offset // limit) + 1,
+            total_pages=(total_count + limit - 1) // limit
+        )
+        
+        # Create filters applied info
+        filters_applied = FiltersApplied(
+            area_id=area_id,
+            city=city,
+            department=department,
+            academic_level=academic_level,
+            name=name
+        )
+        
+        return ProgramSearchResponse(
+            programs=programs_info,
+            pagination=pagination_info,
+            filters_applied=filters_applied
+        )
         
     except Exception as e:
         logger.error(f"Error in advanced program search: {str(e)}")
@@ -140,13 +255,13 @@ async def search_programs_advanced(
             detail=f"Failed to search programs: {str(e)}"
         )
 
-@router.get("/predictions/history/{user_email}")
+@router.get("/predictions/history/{user_email}", response_model=PredictionHistoryResponse)
 async def get_prediction_history(
     user_email: str,
     limit: int = Query(20, description="Number of predictions per page", ge=1, le=100),
     offset: int = Query(0, description="Number of predictions to skip", ge=0),
     db: Session = Depends(get_db)
-):
+) -> PredictionHistoryResponse:
     """
     Get all previous predictions for a given user email with pagination.
     Returns detailed information about each prediction including input data and results.
@@ -168,19 +283,29 @@ async def get_prediction_history(
         total_count = query.count()
         
         if total_count == 0:
-            return {
-                "user_email": user_email,
-                "predictions": [],
-                "pagination": {
-                    "total": 0,
-                    "limit": limit,
-                    "offset": offset,
-                    "has_more": False,
-                    "current_page": 1,
-                    "total_pages": 0
-                },
-                "message": "No predictions found for this user"
-            }
+            pagination_info = PaginationInfo(
+                total=0,
+                limit=limit,
+                offset=offset,
+                has_more=False,
+                current_page=1,
+                total_pages=0
+            )
+            
+            statistics = PredictionStatistics(
+                total_predictions=0,
+                latest_prediction_date=None,
+                models_used=[],
+                average_confidence=0.0
+            )
+            
+            return PredictionHistoryResponse(
+                user_email=user_email,
+                predictions=[],
+                pagination=pagination_info,
+                statistics=statistics,
+                message="No predictions found for this user"
+            )
         
         # Apply pagination
         predictions = query.offset(offset).limit(limit).all()
@@ -191,24 +316,38 @@ async def get_prediction_history(
         # Calculate statistics
         latest_prediction = predictions[0] if predictions else None
         
-        return {
-            "user_email": user_email,
-            "predictions": predictions_list,
-            "pagination": {
-                "total": total_count,
-                "limit": limit,
-                "offset": offset,
-                "has_more": (offset + limit) < total_count,
-                "current_page": (offset // limit) + 1,
-                "total_pages": (total_count + limit - 1) // limit
-            },
-            "statistics": {
-                "total_predictions": total_count,
-                "latest_prediction_date": latest_prediction.created_at.isoformat() if latest_prediction and latest_prediction.created_at is not None else None,
-                "models_used": list(set(pred.model_type for pred in predictions)),
-                "average_confidence": sum(pred.confidence_score for pred in predictions if pred.confidence_score is not None) / len([pred for pred in predictions if pred.confidence_score is not None]) if predictions else 0
-            }
-        }
+        # Convert predictions to PredictionInfo objects
+        predictions_info = [PredictionInfo(**pred) for pred in predictions_list]
+        
+        # Create pagination info
+        pagination_info = PaginationInfo(
+            total=total_count,
+            limit=limit,
+            offset=offset,
+            has_more=(offset + limit) < total_count,
+            current_page=(offset // limit) + 1,
+            total_pages=(total_count + limit - 1) // limit
+        )
+        
+        # Create statistics using formatted prediction data
+        models_used = list(set(pred["model_type"] for pred in predictions_list if pred["model_type"]))
+        predictions_with_confidence = [pred for pred in predictions_list if pred["confidence_score"] is not None]
+        avg_confidence = sum(pred["confidence_score"] for pred in predictions_with_confidence) / len(predictions_with_confidence) if predictions_with_confidence else 0.0
+        
+        statistics = PredictionStatistics(
+            total_predictions=total_count,
+            latest_prediction_date=latest_prediction.created_at.isoformat() if latest_prediction and latest_prediction.created_at is not None else None,
+            models_used=models_used,
+            average_confidence=avg_confidence
+        )
+        
+        return PredictionHistoryResponse(
+            user_email=user_email,
+            predictions=predictions_info,
+            pagination=pagination_info,
+            statistics=statistics,
+            message=None
+        )
         
     except HTTPException:
         raise
@@ -219,40 +358,56 @@ async def get_prediction_history(
             detail=f"Failed to get prediction history: {str(e)}"
         )
 
-@router.get("/programs/areas")
+@router.get("/programs/areas", response_model=KnowledgeAreasResponse)
 async def list_knowledge_areas(
+    area_id: Optional[int] = Query(None, description="Filter by specific area ID"),
     limit: int = Query(100, description="Number of areas per page", ge=1, le=200),
     offset: int = Query(0, description="Number of areas to skip", ge=0),
     db: Session = Depends(get_db)
-):
-    """List all available knowledge areas with pagination"""
+) -> KnowledgeAreasResponse:
+    """
+    List all available knowledge areas with pagination and optional filtering by area_id.
+    
+    Returns:
+    - **areas**: List of knowledge areas with id, name, description, code, and created_at
+    - **pagination**: Pagination information including total count, current page, and navigation info
+    
+    Query Parameters:
+    - **area_id**: Optional filter to get a specific area by ID
+    - **limit**: Number of areas per page (1-200, default: 100)
+    - **offset**: Number of areas to skip for pagination (default: 0)
+    """
     try:
-        # Get total count
-        total_count = db.query(KnowledgeArea).count()
+        # Build base query
+        query = db.query(KnowledgeArea)
+        
+        # Apply area_id filter if provided
+        if area_id is not None:
+            query = query.filter(KnowledgeArea.id == area_id)
+        
+        # Get total count with filters applied
+        total_count = query.count()
         
         # Get areas with pagination
-        areas = db.query(KnowledgeArea).offset(offset).limit(limit).all()
+        areas = query.offset(offset).limit(limit).all()
         
-        areas_list = []
-        for area in areas:
-            areas_list.append({
-                "id": area.id,
-                "name": area.name,
-                "description": area.description,
-                "code": area.code
-            })
+        # Convert to schema objects
+        areas_list = [KnowledgeAreaSchema.from_orm(area) for area in areas]
         
-        return {
-            "areas": areas_list,
-            "pagination": {
-                "total": total_count,
-                "limit": limit,
-                "offset": offset,
-                "has_more": (offset + limit) < total_count,
-                "current_page": (offset // limit) + 1,
-                "total_pages": (total_count + limit - 1) // limit
-            }
-        }
+        # Create pagination info
+        pagination_info = PaginationInfo(
+            total=total_count,
+            limit=limit,
+            offset=offset,
+            has_more=(offset + limit) < total_count,
+            current_page=(offset // limit) + 1,
+            total_pages=(total_count + limit - 1) // limit
+        )
+        
+        return KnowledgeAreasResponse(
+            areas=areas_list,
+            pagination=pagination_info
+        )
         
     except Exception as e:
         logger.error(f"Error listing knowledge areas: {str(e)}")
@@ -261,8 +416,8 @@ async def list_knowledge_areas(
             detail=f"Failed to list knowledge areas: {str(e)}"
         )
 
-@router.get("/programs/filters")
-async def get_available_filters(db: Session = Depends(get_db)):
+@router.get("/programs/filters", response_model=FiltersResponse)
+async def get_available_filters(db: Session = Depends(get_db)) -> FiltersResponse:
     """Get all available filter options for program search"""
     try:
         # Get unique cities
@@ -288,30 +443,35 @@ async def get_available_filters(db: Session = Depends(get_db)):
         
         # Get knowledge areas
         areas = db.query(KnowledgeArea).order_by(KnowledgeArea.name).all()
-        knowledge_areas = [{
+        knowledge_areas_data = [{
             "id": area.id,
             "name": area.name,
             "code": area.code
         } for area in areas]
+        
+        knowledge_areas = [SimpleKnowledgeArea(**area_data) for area_data in knowledge_areas_data]
         
         # Get total programs count
         total_programs = db.query(AcademicProgram).filter(
             AcademicProgram.is_active == True
         ).count()
         
-        return {
-            "cities": cities[:100],  # Limit to first 100
-            "departments": departments,
-            "academic_levels": levels,
-            "knowledge_areas": knowledge_areas,
-            "total_programs": total_programs,
-            "filter_counts": {
-                "cities": len(cities),
-                "departments": len(departments),
-                "academic_levels": len(levels),
-                "knowledge_areas": len(knowledge_areas)
-            }
-        }
+        # Create filter counts
+        filter_counts = FilterCounts(
+            cities=len(cities),
+            departments=len(departments),
+            academic_levels=len(levels),
+            knowledge_areas=len(knowledge_areas)
+        )
+        
+        return FiltersResponse(
+            cities=cities[:100],  # Limit to first 100
+            departments=departments,
+            academic_levels=levels,
+            knowledge_areas=knowledge_areas,
+            total_programs=total_programs,
+            filter_counts=filter_counts
+        )
         
     except Exception as e:
         logger.error(f"Error getting filter options: {str(e)}")

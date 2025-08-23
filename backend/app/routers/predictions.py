@@ -234,19 +234,15 @@ async def make_prediction(
         # Refresh the record to get the actual values
         db.refresh(prediction_record)
         
-        # Get the actual values from the refreshed record
-        record_id = int(prediction_record.id)
-        record_created_at = prediction_record.created_at
-        
         return PredictionResponse(
-            id=record_id,
+            id=int(prediction_record.id),  # type: ignore
             user_email=user_email,
             predictions=area_predictions,
             model_type=str(model_type),
             model_version=str(model_version_record.version),
             processing_time=0.0,  # TODO: Calculate actual processing time
             confidence_score=area_predictions[0].confidence if area_predictions else 0.0,
-            created_at=record_created_at
+            created_at=prediction_record.created_at  # type: ignore
         )
         
     except Exception as e:

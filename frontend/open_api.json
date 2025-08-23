@@ -423,7 +423,7 @@
             "content": {
               "application/json": {
                 "schema": {
-
+                  "$ref": "#/components/schemas/PredictionHistoryResponse"
                 }
               }
             }
@@ -639,7 +639,7 @@
             "content": {
               "application/json": {
                 "schema": {
-
+                  "$ref": "#/components/schemas/ProgramSearchResponse"
                 }
               }
             }
@@ -663,9 +663,27 @@
           "Programs"
         ],
         "summary": "List Knowledge Areas",
-        "description": "List all available knowledge areas with pagination",
+        "description": "List all available knowledge areas with pagination and optional filtering by area_id.\n\nReturns:\n- **areas**: List of knowledge areas with id, name, description, code, and created_at\n- **pagination**: Pagination information including total count, current page, and navigation info\n\nQuery Parameters:\n- **area_id**: Optional filter to get a specific area by ID\n- **limit**: Number of areas per page (1-200, default: 100)\n- **offset**: Number of areas to skip for pagination (default: 0)",
         "operationId": "list_knowledge_areas_api_v1_programs_areas_get",
         "parameters": [
+          {
+            "name": "area_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Filter by specific area ID",
+              "title": "Area Id"
+            },
+            "description": "Filter by specific area ID"
+          },
           {
             "name": "limit",
             "in": "query",
@@ -700,7 +718,7 @@
             "content": {
               "application/json": {
                 "schema": {
-
+                  "$ref": "#/components/schemas/KnowledgeAreasResponse"
                 }
               }
             }
@@ -732,7 +750,7 @@
             "content": {
               "application/json": {
                 "schema": {
-
+                  "$ref": "#/components/schemas/FiltersResponse"
                 }
               }
             }
@@ -895,6 +913,162 @@
         "title": "DatasetStatus",
         "description": "Dataset status response"
       },
+      "FilterCounts": {
+        "properties": {
+          "cities": {
+            "type": "integer",
+            "title": "Cities",
+            "description": "Number of unique cities available"
+          },
+          "departments": {
+            "type": "integer",
+            "title": "Departments",
+            "description": "Number of unique departments available"
+          },
+          "academic_levels": {
+            "type": "integer",
+            "title": "Academic Levels",
+            "description": "Number of unique academic levels available"
+          },
+          "knowledge_areas": {
+            "type": "integer",
+            "title": "Knowledge Areas",
+            "description": "Number of knowledge areas available"
+          }
+        },
+        "type": "object",
+        "required": [
+          "cities",
+          "departments",
+          "academic_levels",
+          "knowledge_areas"
+        ],
+        "title": "FilterCounts",
+        "description": "Filter counts information schema"
+      },
+      "FiltersApplied": {
+        "properties": {
+          "area_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Area Id",
+            "description": "Knowledge area ID filter"
+          },
+          "city": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "City",
+            "description": "City filter"
+          },
+          "department": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Department",
+            "description": "Department filter"
+          },
+          "academic_level": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Academic Level",
+            "description": "Academic level filter"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name",
+            "description": "Name search filter"
+          }
+        },
+        "type": "object",
+        "title": "FiltersApplied",
+        "description": "Applied filters information schema"
+      },
+      "FiltersResponse": {
+        "properties": {
+          "cities": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Cities",
+            "description": "List of available cities (limited to first 100)"
+          },
+          "departments": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Departments",
+            "description": "List of available departments"
+          },
+          "academic_levels": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Academic Levels",
+            "description": "List of available academic levels"
+          },
+          "knowledge_areas": {
+            "items": {
+              "$ref": "#/components/schemas/SimpleKnowledgeArea"
+            },
+            "type": "array",
+            "title": "Knowledge Areas",
+            "description": "List of available knowledge areas"
+          },
+          "total_programs": {
+            "type": "integer",
+            "title": "Total Programs",
+            "description": "Total number of active programs"
+          },
+          "filter_counts": {
+            "$ref": "#/components/schemas/FilterCounts",
+            "description": "Count of items in each filter category"
+          }
+        },
+        "type": "object",
+        "required": [
+          "cities",
+          "departments",
+          "academic_levels",
+          "knowledge_areas",
+          "total_programs",
+          "filter_counts"
+        ],
+        "title": "FiltersResponse",
+        "description": "Response schema for available filters endpoint"
+      },
       "HTTPValidationError": {
         "properties": {
           "detail": {
@@ -908,6 +1082,132 @@
         "type": "object",
         "title": "HTTPValidationError"
       },
+      "KnowledgeArea": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 200,
+            "title": "Name"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "code": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 50
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Code"
+          },
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "id",
+          "created_at"
+        ],
+        "title": "KnowledgeArea"
+      },
+      "KnowledgeAreaInfo": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id",
+            "description": "Knowledge area ID"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name",
+            "description": "Knowledge area name"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description",
+            "description": "Knowledge area description"
+          },
+          "code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Code",
+            "description": "Knowledge area code"
+          }
+        },
+        "type": "object",
+        "title": "KnowledgeAreaInfo",
+        "description": "Knowledge area information schema"
+      },
+      "KnowledgeAreasResponse": {
+        "properties": {
+          "areas": {
+            "items": {
+              "$ref": "#/components/schemas/KnowledgeArea"
+            },
+            "type": "array",
+            "title": "Areas",
+            "description": "List of knowledge areas"
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationInfo",
+            "description": "Pagination information"
+          }
+        },
+        "type": "object",
+        "required": [
+          "areas",
+          "pagination"
+        ],
+        "title": "KnowledgeAreasResponse",
+        "description": "Response schema for knowledge areas endpoint"
+      },
       "ModelType": {
         "type": "string",
         "enum": [
@@ -915,6 +1215,198 @@
           "neural_network"
         ],
         "title": "ModelType"
+      },
+      "PaginationInfo": {
+        "properties": {
+          "total": {
+            "type": "integer",
+            "title": "Total",
+            "description": "Total number of items"
+          },
+          "limit": {
+            "type": "integer",
+            "title": "Limit",
+            "description": "Items per page"
+          },
+          "offset": {
+            "type": "integer",
+            "title": "Offset",
+            "description": "Items skipped"
+          },
+          "has_more": {
+            "type": "boolean",
+            "title": "Has More",
+            "description": "Whether there are more items"
+          },
+          "current_page": {
+            "type": "integer",
+            "title": "Current Page",
+            "description": "Current page number"
+          },
+          "total_pages": {
+            "type": "integer",
+            "title": "Total Pages",
+            "description": "Total number of pages"
+          }
+        },
+        "type": "object",
+        "required": [
+          "total",
+          "limit",
+          "offset",
+          "has_more",
+          "current_page",
+          "total_pages"
+        ],
+        "title": "PaginationInfo",
+        "description": "Pagination information schema"
+      },
+      "PredictionHistoryResponse": {
+        "properties": {
+          "user_email": {
+            "type": "string",
+            "title": "User Email",
+            "description": "Email of the user"
+          },
+          "predictions": {
+            "items": {
+              "$ref": "#/components/schemas/PredictionInfo"
+            },
+            "type": "array",
+            "title": "Predictions",
+            "description": "List of user predictions"
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationInfo",
+            "description": "Pagination information"
+          },
+          "statistics": {
+            "$ref": "#/components/schemas/PredictionStatistics",
+            "description": "Statistical information about user predictions"
+          },
+          "message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Message",
+            "description": "Additional message (e.g., when no predictions found)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "user_email",
+          "predictions",
+          "pagination",
+          "statistics"
+        ],
+        "title": "PredictionHistoryResponse",
+        "description": "Response schema for prediction history endpoint"
+      },
+      "PredictionInfo": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id",
+            "description": "Prediction unique identifier"
+          },
+          "user_email": {
+            "type": "string",
+            "title": "User Email",
+            "description": "Email of the user who made the prediction"
+          },
+          "predictions": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Predictions",
+            "description": "Prediction results data"
+          },
+          "model_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Type",
+            "description": "Type of ML model used"
+          },
+          "model_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Version",
+            "description": "Version of the ML model"
+          },
+          "processing_time": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Processing Time",
+            "description": "Time taken to process prediction (seconds)"
+          },
+          "confidence_score": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Confidence Score",
+            "description": "Confidence score of the prediction"
+          },
+          "created_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At",
+            "description": "Prediction creation timestamp (ISO format)"
+          },
+          "input_data": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Input Data",
+            "description": "Input data used for prediction"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "user_email",
+          "predictions"
+        ],
+        "title": "PredictionInfo",
+        "description": "Prediction information schema"
       },
       "PredictionInput": {
         "properties": {
@@ -1104,6 +1596,291 @@
           "created_at"
         ],
         "title": "PredictionResponse"
+      },
+      "PredictionStatistics": {
+        "properties": {
+          "total_predictions": {
+            "type": "integer",
+            "title": "Total Predictions",
+            "description": "Total number of predictions for the user"
+          },
+          "latest_prediction_date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Latest Prediction Date",
+            "description": "Date of the most recent prediction (ISO format)"
+          },
+          "models_used": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Models Used",
+            "description": "List of model types used in predictions"
+          },
+          "average_confidence": {
+            "type": "number",
+            "title": "Average Confidence",
+            "description": "Average confidence score across all predictions"
+          }
+        },
+        "type": "object",
+        "required": [
+          "total_predictions",
+          "models_used",
+          "average_confidence"
+        ],
+        "title": "PredictionStatistics",
+        "description": "Prediction statistics schema"
+      },
+      "ProgramInfo": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id",
+            "description": "Program unique identifier"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "Program name"
+          },
+          "institution": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Institution",
+            "description": "Institution offering the program"
+          },
+          "academic_level": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Academic Level",
+            "description": "Academic level (e.g., Pregrado, Posgrado)"
+          },
+          "modality": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Modality",
+            "description": "Study modality (e.g., Presencial, Virtual)"
+          },
+          "duration": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Duration",
+            "description": "Program duration"
+          },
+          "city": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "City",
+            "description": "City where program is offered"
+          },
+          "department": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Department",
+            "description": "Department/state where program is offered"
+          },
+          "country": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Country",
+            "description": "Country where program is offered"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description",
+            "description": "Program description"
+          },
+          "requirements": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Requirements",
+            "description": "Program requirements"
+          },
+          "website": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Website",
+            "description": "Program website URL"
+          },
+          "is_active": {
+            "type": "boolean",
+            "title": "Is Active",
+            "description": "Whether the program is currently active"
+          },
+          "created_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At",
+            "description": "Program creation timestamp (ISO format)"
+          },
+          "updated_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updated At",
+            "description": "Program last update timestamp (ISO format)"
+          },
+          "knowledge_area": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/KnowledgeAreaInfo"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Associated knowledge area"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "is_active"
+        ],
+        "title": "ProgramInfo",
+        "description": "Academic program information schema"
+      },
+      "ProgramSearchResponse": {
+        "properties": {
+          "programs": {
+            "items": {
+              "$ref": "#/components/schemas/ProgramInfo"
+            },
+            "type": "array",
+            "title": "Programs",
+            "description": "List of matching academic programs"
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationInfo",
+            "description": "Pagination information"
+          },
+          "filters_applied": {
+            "$ref": "#/components/schemas/FiltersApplied",
+            "description": "Filters that were applied to the search"
+          }
+        },
+        "type": "object",
+        "required": [
+          "programs",
+          "pagination",
+          "filters_applied"
+        ],
+        "title": "ProgramSearchResponse",
+        "description": "Response schema for program search endpoint"
+      },
+      "SimpleKnowledgeArea": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id",
+            "description": "Knowledge area ID"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "Knowledge area name"
+          },
+          "code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Code",
+            "description": "Knowledge area code"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name"
+        ],
+        "title": "SimpleKnowledgeArea",
+        "description": "Simplified knowledge area schema for filters"
       },
       "TrainingRequestKNN": {
         "properties": {
