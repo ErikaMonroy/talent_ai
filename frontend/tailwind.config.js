@@ -33,13 +33,14 @@ export default {
   				DEFAULT: 'hsl(var(--popover))',
   				foreground: 'hsl(var(--popover-foreground))'
   			},
+  			// Colores actualizados del tema Violet Bloom
   			primary: {
-  				DEFAULT: 'hsl(var(--primary))',
-  				foreground: 'hsl(var(--primary-foreground))'
+  				DEFAULT: '#7033ff', // Color violeta principal
+  				foreground: '#ffffff' // Texto blanco sobre el primary
   			},
   			secondary: {
-  				DEFAULT: 'hsl(var(--secondary))',
-  				foreground: 'hsl(var(--secondary-foreground))'
+  				DEFAULT: '#edf0f4', // Gris claro
+  				foreground: '#080808' // Texto oscuro sobre el secondary
   			},
   			muted: {
   				DEFAULT: 'hsl(var(--muted))',
@@ -62,39 +63,39 @@ export default {
   				DEFAULT: 'hsl(var(--warning))',
   				foreground: 'hsl(var(--warning-foreground))'
   			},
-  			// Colores por dimensión de TalentAI
+  			// Colores por dimensión de TalentAI (actualizados con tonos que complementen el tema)
   			dimension: {
   				1: {
-  					DEFAULT: 'hsl(var(--dimension-1))', // Lógico-Matemático
-  					light: 'hsl(var(--dimension-1-light))'
+  					DEFAULT: '#7033ff', // Usa el primary como base
+  					light: '#9966ff'
   				},
   				2: {
-  					DEFAULT: 'hsl(var(--dimension-2))', // Comunicación
-  					light: 'hsl(var(--dimension-2-light))'
+  					DEFAULT: '#5c46ff',
+  					light: '#8a7aff'
   				},
   				3: {
-  					DEFAULT: 'hsl(var(--dimension-3))', // Ciencias
-  					light: 'hsl(var(--dimension-3-light))'
+  					DEFAULT: '#4d59ff',
+  					light: '#7d8cff'
   				},
   				4: {
-  					DEFAULT: 'hsl(var(--dimension-4))', // Humanidades
-  					light: 'hsl(var(--dimension-4-light))'
+  					DEFAULT: '#3d6cff',
+  					light: '#6f9eff'
   				},
   				5: {
-  					DEFAULT: 'hsl(var(--dimension-5))', // Creatividad
-  					light: 'hsl(var(--dimension-5-light))'
+  					DEFAULT: '#2d7fff',
+  					light: '#61b1ff'
   				},
   				6: {
-  					DEFAULT: 'hsl(var(--dimension-6))', // Liderazgo
-  					light: 'hsl(var(--dimension-6-light))'
+  					DEFAULT: '#1d92ff',
+  					light: '#53c4ff'
   				},
   				7: {
-  					DEFAULT: 'hsl(var(--dimension-7))', // Pensamiento Crítico
-  					light: 'hsl(var(--dimension-7-light))'
+  					DEFAULT: '#0da5ff',
+  					light: '#45d7ff'
   				},
   				8: {
-  					DEFAULT: 'hsl(var(--dimension-8))', // Adaptabilidad
-  					light: 'hsl(var(--dimension-8-light))'
+  					DEFAULT: '#00b8ff',
+  					light: '#37eaff'
   				}
   			},
   			border: 'hsl(var(--border))',
