@@ -50,7 +50,6 @@ networks:
   talentai_network:
     driver: bridge
     name: talentai_production_network
-    external: true
 
 # Volumes
 volumes:
