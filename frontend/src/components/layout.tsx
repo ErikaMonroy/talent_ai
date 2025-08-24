@@ -116,17 +116,11 @@ export function Layout({ children }: LayoutProps) {
       {/* Footer */}
       <footer className="border-t bg-muted/50">
         <div className="container py-8">
-          <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
-            <div className="flex items-center space-x-2">
-              <Brain className="h-6 w-6 text-primary" />
-              <span className="text-lg font-semibold text-primary">TalentAI</span>
-            </div>
-            <p className="text-sm text-muted-foreground text-center md:text-right">
-              © 2025 TalentAI. Plataforma de evaluación de talento con inteligencia artificial. 
-              <br />
-              Desarrollado por <a href="https://www.linkedin.com/in/erika-milena-monroy-lozano-7957041ba/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Erika Monroy</a>
-            </p>
-          </div>
+          <p className="text-sm text-muted-foreground text-center">
+            © 2025 TalentAI. Plataforma de evaluación de talento con inteligencia artificial. 
+            <br />
+            Desarrollado por <a href="https://www.linkedin.com/in/erika-milena-monroy-lozano-7957041ba/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Erika Monroy</a>
+          </p>
         </div>
       </footer>
     </div>

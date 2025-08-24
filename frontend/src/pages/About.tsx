@@ -99,6 +99,21 @@ export default function About() {
           Revolucionamos la evaluación de talento mediante inteligencia artificial y metodologías científicas, 
           ayudando a personas y organizaciones a descubrir y desarrollar su máximo potencial.
         </p>
+        
+        {/* MVP Notice */}
+        <Card className="mt-8 bg-amber-50 border-amber-200 dark:bg-amber-950/20 dark:border-amber-800">
+          <CardContent className="py-4">
+            <div className="flex items-center justify-center space-x-2 mb-2">
+              <Lightbulb className="w-5 h-5 text-amber-600" />
+              <h3 className="font-semibold text-amber-800 dark:text-amber-200">Versión MVP - Proyecto de Grado</h3>
+            </div>
+            <p className="text-sm text-amber-700 dark:text-amber-300 max-w-2xl mx-auto">
+              TalentAI es actualmente un <strong>Producto Mínimo Viable (MVP)</strong> desarrollado como proyecto de grado 
+              para la especialización en "Ciencias de Datos y Analítica". Esta es una versión de prueba que está 
+              en constante evolución y algunas funcionalidades se encuentran en desarrollo.
+            </p>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Mission Section */}
@@ -182,7 +197,7 @@ export default function About() {
       {/* Team Section */}
       <div className="mb-12">
         <h2 className="text-2xl font-bold text-center mb-8">Nuestro Equipo</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="flex justify-center">
           {team.map((member, index) => {
             const Icon = member.icon
             return (
@@ -210,18 +225,22 @@ export default function About() {
       {/* CTA Section */}
       <Card className="bg-primary/5 border-primary/20">
         <CardContent className="text-center py-8">
-          <h2 className="text-2xl font-bold mb-4">¿Listo para descubrir tu talento?</h2>
+          <h2 className="text-2xl font-bold mb-4">¿Listo para probar TalentAI?</h2>
           <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-            Comienza tu evaluación personalizada y obtén insights profundos sobre tus fortalezas y potencial de desarrollo.
+            Experimenta con nuestra versión MVP y ayúdanos a mejorar con tu feedback. 
+            Obtén insights sobre tus fortalezas mientras contribuyes al desarrollo de la plataforma.
           </p>
-          <div className="flex justify-center">
+          <div className="flex justify-center space-x-4">
             <Button asChild size="lg">
               <Link to="/evaluation">
                 <Users className="w-5 h-5 mr-2" />
-                Comenzar Evaluación
+                Probar Evaluación
               </Link>
             </Button>
           </div>
+          <p className="text-xs text-muted-foreground mt-4">
+            * Versión de prueba - Los resultados pueden variar y están sujetos a mejoras continuas
+          </p>
         </CardContent>
       </Card>
     </div>
