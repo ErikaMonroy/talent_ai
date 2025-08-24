@@ -25,13 +25,14 @@ RUN mkdir -p /app/logs /app/models /app/data
 # Set environment variables
 ENV PYTHONPATH=/app
 ENV PYTHONUNBUFFERED=1
+#ENV PORT=8000
 
-# Expose port
-EXPOSE 8000
+# Expose port (using environment variable)
+EXPOSE ${PORT}
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:8000/health || exit 1
+    CMD curl -f http://localhost:$PORT/health || exit 1
 
 # Run the application
-CMD ["python", "-m", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+CMD python -m uvicorn main:app --host 0.0.0.0 --port $PORT --reload

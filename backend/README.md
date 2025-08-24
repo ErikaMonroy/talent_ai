@@ -160,8 +160,7 @@ open http://localhost:8000/docs
 
 ```bash
 # Navegar al directorio backend
-cd /Users/michaelpage/Documents/Desarrollo/proyectos/talent_ai/backend
-
+cd proyecto/backend
 # Configurar variables de entorno
 cp .env.example .env
 # Editar .env según necesidades
@@ -180,8 +179,7 @@ docker-compose logs -f backend
 
 ```bash
 # Navegar al directorio backend
-cd /Users/michaelpage/Documents/Desarrollo/proyectos/talent_ai/backend
-
+cd proyecto/backend
 # Hacer ejecutable el script
 chmod +x deploy.sh
 

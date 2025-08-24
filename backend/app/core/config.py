@@ -20,6 +20,9 @@ class Settings(BaseSettings):
     # CORS
     ALLOWED_HOSTS: List[str] = ["*"]
     
+    # Server
+    PORT: int = 8000
+    
     # Database
     POSTGRES_SERVER: str = "localhost"
     POSTGRES_USER: str = "talentai"
