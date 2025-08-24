@@ -173,6 +173,58 @@ class TalentAIApiService {
   }
 
   /**
+   * Obtener áreas de conocimiento con paginación y filtros
+   */
+  async getKnowledgeAreas(params: {
+    area_id?: number;
+    limit?: number;
+    offset?: number;
+  } = {}): Promise<ApiResponse<any>> {
+    try {
+      const response = await this.client.get(
+        '/api/v1/programs/areas',
+        { params }
+      );
+      
+      return {
+        data: response.data,
+        success: true
+      };
+    } catch (error) {
+      return {
+        error: error as ApiError,
+        success: false
+      };
+    }
+  }
+
+  /**
+   * Obtener información detallada de un área específica por ID
+   */
+  async getAreaById(areaId: number): Promise<ApiResponse<any>> {
+    try {
+      const response = await this.getKnowledgeAreas({ area_id: areaId, limit: 1 });
+      
+      if (response.success && response.data?.areas?.length > 0) {
+        return {
+          data: response.data.areas[0],
+          success: true
+        };
+      }
+      
+      return {
+        error: { message: 'Área no encontrada', code: '404' } as ApiError,
+        success: false
+      };
+    } catch (error) {
+      return {
+        error: error as ApiError,
+        success: false
+      };
+    }
+  }
+
+  /**
    * Obtener filtros disponibles para búsqueda de programas
    */
   async getAvailableFilters(): Promise<ApiResponse<ProgramFilters>> {
@@ -223,21 +275,32 @@ export const prepareFormDataForPrediction = (
   dimensionAverages: Record<number, number>,
   modelType: 'knn' | 'neural_network' = 'knn'
 ): PredictionInput => {
+  // Función para asegurar que los valores de dimensiones estén en el rango 1-5
+  const clampDimensionValue = (value: number): number => {
+    if (value === 0) return 1; // Si no hay respuestas, usar valor mínimo
+    return Math.max(1, Math.min(5, value)); // Asegurar rango 1-5
+  };
+
+  // Función para asegurar que los puntajes ICFES estén en rangos válidos
+  const clampIcfesScore = (value: number, max: number): number => {
+    return Math.max(0, Math.min(max, value));
+  };
+
   return {
     user_email: email,
-    matematicas: icfesScores.matematicas || 0,
-    lectura_critica: icfesScores.lectura_critica || 0,
-    ciencias_naturales: icfesScores.ciencias_naturales || 0,
-    sociales_ciudadanas: icfesScores.sociales_ciudadanas || 0,
-    ingles: icfesScores.ingles || 0,
-    dimension_1_logico_matematico: dimensionAverages[1] || 0,
-    dimension_2_comprension_comunicacion: dimensionAverages[2] || 0,
-    dimension_3_pensamiento_cientifico: dimensionAverages[3] || 0,
-    dimension_4_analisis_social_humanistico: dimensionAverages[4] || 0,
-    dimension_5_creatividad_innovacion: dimensionAverages[5] || 0,
-    dimension_6_liderazgo_trabajo_equipo: dimensionAverages[6] || 0,
-    dimension_7_pensamiento_critico: dimensionAverages[7] || 0,
-    dimension_8_adaptabilidad_aprendizaje: dimensionAverages[8] || 0,
+    matematicas: clampIcfesScore(icfesScores.matematicas || 0, 500),
+    lectura_critica: clampIcfesScore(icfesScores.lectura_critica || 0, 400),
+    ciencias_naturales: clampIcfesScore(icfesScores.ciencias_naturales || 0, 300),
+    sociales_ciudadanas: clampIcfesScore(icfesScores.sociales_ciudadanas || 0, 400),
+    ingles: clampIcfesScore(icfesScores.ingles || 0, 500),
+    dimension_1_logico_matematico: clampDimensionValue(dimensionAverages[1] || 0),
+    dimension_2_comprension_comunicacion: clampDimensionValue(dimensionAverages[2] || 0),
+    dimension_3_pensamiento_cientifico: clampDimensionValue(dimensionAverages[3] || 0),
+    dimension_4_analisis_social_humanistico: clampDimensionValue(dimensionAverages[4] || 0),
+    dimension_5_creatividad_innovacion: clampDimensionValue(dimensionAverages[5] || 0),
+    dimension_6_liderazgo_trabajo_equipo: clampDimensionValue(dimensionAverages[6] || 0),
+    dimension_7_pensamiento_critico: clampDimensionValue(dimensionAverages[7] || 0),
+    dimension_8_adaptabilidad_aprendizaje: clampDimensionValue(dimensionAverages[8] || 0),
     model_type: modelType
   };
 };

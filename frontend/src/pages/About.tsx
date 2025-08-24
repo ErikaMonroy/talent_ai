@@ -80,22 +80,10 @@ const dimensions = [
 
 const team = [
   {
-    name: 'Dr. María González',
+    name: 'Erika Monroy',
     role: 'Directora de Investigación',
-    description: 'PhD en Psicología Cognitiva, especialista en evaluación de talentos',
+    description: 'Ingeniera en Telecomunicaciones, especialista en Ciencias de Datos y Analítica en formación',
     icon: BookOpen
-  },
-  {
-    name: 'Carlos Rodríguez',
-    role: 'CTO',
-    description: 'Ingeniero en IA, experto en algoritmos de evaluación adaptativa',
-    icon: Brain
-  },
-  {
-    name: 'Ana Martínez',
-    role: 'Directora de Producto',
-    description: 'Especialista en UX/UI y diseño de experiencias de evaluación',
-    icon: Heart
   }
 ]
 
@@ -226,17 +214,11 @@ export default function About() {
           <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
             Comienza tu evaluación personalizada y obtén insights profundos sobre tus fortalezas y potencial de desarrollo.
           </p>
-          <div className="flex justify-center space-x-4">
+          <div className="flex justify-center">
             <Button asChild size="lg">
               <Link to="/evaluation">
                 <Users className="w-5 h-5 mr-2" />
                 Comenzar Evaluación
-              </Link>
-            </Button>
-            <Button variant="outline" size="lg" asChild>
-              <Link to="/results">
-                <TrendingUp className="w-5 h-5 mr-2" />
-                Ver Ejemplo de Resultados
               </Link>
             </Button>
           </div>

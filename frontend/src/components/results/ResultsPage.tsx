@@ -111,7 +111,7 @@ export function ResultsPage() {
   useEffect(() => {
     if (prediction && prediction.predictions.length > 0) {
       const topArea = prediction.predictions[0];
-      searchPrograms({ area_id: topArea.area_id, size: 10 });
+      searchPrograms({ area_id: topArea.area_id, limit: 10 });
       setShowPredictions(true);
     }
   }, [prediction, searchPrograms]);
@@ -536,7 +536,7 @@ export function ResultsPage() {
                       <div className="flex items-center gap-4 text-xs text-gray-500 dark:text-gray-400">
                         <span className="flex items-center gap-1">
                           <Users className="h-3 w-3" />
-                          Área {program.area_id}
+                          Área {program.knowledge_area.name}
                         </span>
                         <span>Nivel: {program.academic_level}</span>
                       </div>

@@ -20,11 +20,6 @@ const navigation = [
     icon: FileText,
   },
   {
-    name: 'Resultados',
-    href: '/results',
-    icon: BarChart3,
-  },
-  {
     name: 'Programas',
     href: '/programs',
     icon: Search,
@@ -127,7 +122,9 @@ export function Layout({ children }: LayoutProps) {
               <span className="text-lg font-semibold text-primary">TalentAI</span>
             </div>
             <p className="text-sm text-muted-foreground text-center md:text-right">
-              © 2024 TalentAI. Plataforma de evaluación de talento con inteligencia artificial.
+              © 2025 TalentAI. Plataforma de evaluación de talento con inteligencia artificial. 
+              <br />
+              Desarrollado por <a href="https://www.linkedin.com/in/erika-milena-monroy-lozano-7957041ba/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Erika Monroy</a>
             </p>
           </div>
         </div>

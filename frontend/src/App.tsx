@@ -7,6 +7,8 @@ import EvaluationPage from "@/pages/Evaluation";
 import ResultsPage from "@/components/results/ResultsPage";
 import ProgramSearch from "@/pages/ProgramSearch";
 import AboutPage from "@/pages/AboutPage";
+import About from "@/pages/About";
+import Debug from "@/pages/Debug";
 
 export default function App() {
   return (
@@ -16,9 +18,9 @@ export default function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/evaluation" element={<EvaluationPage />} />
-            <Route path="/results" element={<ResultsPage />} />
-            <Route path="/results/:predictionId" element={<ResultsPage />} />
-            <Route path="/about" element={<div className="text-center text-xl">Acerca de - Coming Soon</div>} />
+            <Route path="/programs" element={<ProgramSearch />} />
+            <Route path="/debug" element={<Debug />} />
+            <Route path="/about" element={<About />} />
           </Routes>
         </Layout>
         <Toaster richColors position="top-center" duration={Infinity} closeButton={false} />

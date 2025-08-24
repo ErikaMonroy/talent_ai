@@ -153,14 +153,7 @@ export function ResultsStep() {
               </div>
             </div>
             
-            <div>
-              <div className="text-2xl font-bold text-blue-600">
-                {overallAverage.toFixed(1)}/5.0
-              </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">
-                Puntuación promedio
-              </div>
-            </div>
+
             
             <div>
               <div className="text-2xl font-bold text-purple-600">

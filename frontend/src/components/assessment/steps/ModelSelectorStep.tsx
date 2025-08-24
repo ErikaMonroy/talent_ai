@@ -59,6 +59,8 @@ export function ModelSelectorStep() {
         selectedModelType
       );
 
+      console.log('Datos de predicción enviados:', predictionInput);
+
       const response = await apiService.predict(predictionInput);
       
       if (response.success && response.data) {
@@ -70,7 +72,23 @@ export function ModelSelectorStep() {
         throw new Error(response.error?.message || 'Error en la predicción');
       }
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
+      console.error('Error en la predicción:', error);
+      let errorMessage = 'Error desconocido';
+      
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      } else if (typeof error === 'object' && error !== null) {
+        // Manejar errores de validación 422
+        if ('code' in error && error.code === '422') {
+          errorMessage = 'Error de validación: Algunos datos no cumplen con los requisitos del servidor.';
+          if ('details' in error && error.details) {
+            console.error('Detalles del error 422:', error.details);
+          }
+        } else {
+          errorMessage = JSON.stringify(error);
+        }
+      }
+      
       setPredictionError(errorMessage);
       toast.error('Error en la predicción', {
         description: errorMessage

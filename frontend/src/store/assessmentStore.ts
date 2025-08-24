@@ -570,7 +570,16 @@ export const useAssessmentStore = create<AssessmentStore>()(persist(
       const { predictionResult } = get();
       if (!predictionResult?.predictions) return [];
       
-      return predictionResult.predictions
+      // Deduplicar por area_id para evitar claves duplicadas en React
+      const uniqueAreas = predictionResult.predictions.reduce((acc, area) => {
+        const existingArea = acc.find(a => a.area_id === area.area_id);
+        if (!existingArea || area.percentage > existingArea.percentage) {
+          return acc.filter(a => a.area_id !== area.area_id).concat(area);
+        }
+        return acc;
+      }, [] as AreaPrediction[]);
+      
+      return uniqueAreas
         .sort((a, b) => b.percentage - a.percentage)
         .slice(0, limit);
     },

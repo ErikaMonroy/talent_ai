@@ -51,11 +51,25 @@ export interface PredictionHistory {
 export interface Program {
   id: number;
   name: string;
-  area_id: number;
+  institution: string;
+  academic_level: string;
+  modality: string;
+  duration: string;
   city: string;
   department: string;
-  academic_level: string;
-  institution: string;
+  country: string;
+  description: string;
+  requirements: string;
+  website: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string | null;
+  knowledge_area: {
+    id: number;
+    name: string;
+    description: string;
+    code: string;
+  };
 }
 
 // Área de conocimiento
@@ -66,13 +80,30 @@ export interface Area {
   icon: string;
 }
 
+// Información de paginación
+export interface PaginationInfo {
+  total: number;
+  limit: number;
+  offset: number;
+  has_more: boolean;
+  current_page: number;
+  total_pages: number;
+}
+
+// Filtros aplicados en la búsqueda
+export interface AppliedFilters {
+  area_id?: number | null;
+  city?: string | null;
+  department?: string | null;
+  academic_level?: string | null;
+  name?: string | null;
+}
+
 // Respuesta de búsqueda de programas
 export interface ProgramSearchResponse {
   programs: Program[];
-  total: number;
-  page: number;
-  size: number;
-  total_pages: number;
+  pagination: PaginationInfo;
+  filters_applied: AppliedFilters;
 }
 
 // Parámetros de búsqueda de programas
@@ -82,8 +113,8 @@ export interface ProgramSearchParams {
   department?: string;
   academic_level?: string;
   name?: string;
-  page?: number;
-  size?: number;
+  limit?: number;
+  offset?: number;
 }
 
 // Filtros disponibles para búsqueda de programas
