@@ -1,29 +1,6 @@
 version: '3.8'
 
 services:
-  # PostgreSQL Database
-  postgres:
-    image: postgres:15-alpine
-    container_name: talentai_postgres
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB:-talentai}
-      POSTGRES_USER: ${POSTGRES_USER:-talentai_user}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-talentai_password}
-      POSTGRES_HOST_AUTH_METHOD: trust
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./scripts/init_database.py:/docker-entrypoint-initdb.d/init_database.py
-    ports:
-      - "${POSTGRES_PORT:-5432}:5432"
-    networks:
-      - talentai_network
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-talentai_user} -d ${POSTGRES_DB:-talentai}"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
   # Backend API
   backend:
     build:
@@ -32,12 +9,14 @@ services:
     container_name: talentai_backend
     environment:
       # Database Configuration
-      DATABASE_URL: postgresql://${POSTGRES_USER:-talentai_user}:${POSTGRES_PASSWORD:-talentai_password}@postgres:5432/${POSTGRES_DB:-talentai}
-      POSTGRES_HOST: postgres
-      POSTGRES_PORT: 5432
-      POSTGRES_DB: ${POSTGRES_DB:-talentai}
-      POSTGRES_USER: ${POSTGRES_USER:-talentai_user}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-talentai_password}
+      DATABASE_URL: postgresql://${DB_POSTGRESDB_USER}:${DB_POSTGRESDB_PASSWORD}@${DB_POSTGRESDB_HOST}:${DB_POSTGRESDB_PORT:-5432}/${DB_POSTGRESDB_DATABASE}
+      POSTGRES_HOST: ${DB_POSTGRESDB_HOST}
+      POSTGRES_PORT: ${DB_POSTGRESDB_PORT:-5432}
+      POSTGRES_DB: ${DB_POSTGRESDB_DATABASE}
+      POSTGRES_USER: ${DB_POSTGRESDB_USER}
+      POSTGRES_PASSWORD: ${DB_POSTGRESDB_PASSWORD}
+      POSTGRES_SCHEMA: ${DB_POSTGRESDB_SCHEMA:-public}
+      POSTGRES_SSL_ENABLED: ${DB_POSTGRESDB_SSL_ENABLED:-false}
       
       # Application Configuration
       BASE_DIR: /app
@@ -67,10 +46,7 @@ services:
     ports:
       - "${BACKEND_PORT:-8000}:8000"
     networks:
-      - talentai_network
-    depends_on:
-      postgres:
-        condition: service_healthy
+      - default
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
@@ -79,35 +55,14 @@ services:
       retries: 3
       start_period: 40s
 
-  # Redis (for caching - optional)
-  redis:
-    image: redis:7-alpine
-    container_name: talentai_redis
-    ports:
-      - "${REDIS_PORT:-6379}:6379"
-    volumes:
-      - redis_data:/data
-    networks:
-      - talentai_network
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
 # Networks
 networks:
-  talentai_network:
-    driver: bridge
-    name: talentai_network
+  default:
+    name: dokploy-network
+    external: true
 
 # Volumes
 volumes:
-  postgres_data:
-    driver: local
-    name: talentai_postgres_data
-  
   models_data:
     driver: local
     name: talentai_models_data
@@ -115,7 +70,3 @@ volumes:
   logs_data:
     driver: local
     name: talentai_logs_data
-  
-  redis_data:
-    driver: local
-    name: talentai_redis_data

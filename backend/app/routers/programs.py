@@ -5,6 +5,8 @@ from typing import List, Optional, Dict, Any
 import logging
 from datetime import datetime
 from pydantic import Field
+import re
+import unicodedata
 
 from app.database.connection import get_db
 from app.database.models import Prediction, AcademicProgram, KnowledgeArea, ProgramArea
@@ -12,6 +14,104 @@ from app.schemas.schemas import KnowledgeArea as KnowledgeAreaSchema, BaseSchema
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
+
+# City normalization functions
+def normalize_city_name(city_name: str) -> str:
+    """
+    Normalize city names for consistent filtering and deduplication.
+    Handles cases like 'BOGOTÁ' vs 'Bogotá D.C.' -> 'BOGOTÁ'
+    Returns normalized city name in UPPERCASE format WITH accents preserved.
+    """
+    if not city_name:
+        return city_name
+    
+    # Convert to uppercase first to preserve accents
+    normalized = city_name.upper().strip()
+    
+    # Remove common suffixes and variations
+    suffixes_to_remove = [
+        r'\s+D\.?C\.?$',  # D.C. or DC (uppercase)
+        r'\s+DISTRITO\s+CAPITAL$',
+        r'\s+\(.*\)$',  # Remove parentheses content
+    ]
+    
+    for suffix_pattern in suffixes_to_remove:
+        normalized = re.sub(suffix_pattern, '', normalized)
+    
+    # Clean up extra spaces
+    normalized = ' '.join(normalized.split())
+    
+    return normalized
+
+def create_city_search_conditions(city_filter: str, model_field) -> list:
+    """
+    Create multiple search conditions for flexible city matching.
+    Returns a list of OR conditions to match various city name formats.
+    All searches are case-insensitive and handle accents.
+    """
+    conditions = []
+    
+    # Original search (case insensitive)
+    conditions.append(model_field.ilike(f"%{city_filter}%"))
+    
+    # Normalized search (uppercase with accents preserved)
+    normalized_filter = normalize_city_name(city_filter)
+    if normalized_filter != city_filter.upper():
+        conditions.append(model_field.ilike(f"%{normalized_filter}%"))
+    
+    # Also search for the lowercase version
+    conditions.append(model_field.ilike(f"%{city_filter.lower()}%"))
+    
+    # Search without accents for flexibility
+    filter_without_accents = unicodedata.normalize('NFD', city_filter)
+    filter_without_accents = ''.join(c for c in filter_without_accents if unicodedata.category(c) != 'Mn')
+    conditions.append(model_field.ilike(f"%{filter_without_accents}%"))
+    
+    # Common variations for specific cities
+    city_variations = {
+        'bogota': ['bogotá', 'bogota d.c.', 'bogotá d.c.', 'santafe de bogota', 'BOGOTÁ', 'BOGOTA D.C.', 'BOGOTA'],
+        'medellin': ['medellín', 'MEDELLÍN', 'MEDELLIN'],
+        'cali': ['santiago de cali', 'SANTIAGO DE CALI'],
+        'barranquilla': ['BARRANQUILLA'],
+        'cartagena': ['cartagena de indias', 'CARTAGENA DE INDIAS'],
+    }
+    
+    # Use the filter without accents for variation matching
+    filter_key = filter_without_accents.lower()
+    if filter_key in city_variations:
+        for variation in city_variations[filter_key]:
+            conditions.append(model_field.ilike(f"%{variation}%"))
+    
+    return conditions
+
+def deduplicate_cities(cities_list: List[str]) -> List[str]:
+    """
+    Remove duplicate cities based on normalized names.
+    Returns cities in consistent UPPERCASE format WITH accents preserved.
+    Prioritizes versions with accents when available.
+    """
+    city_groups = {}
+    
+    # Group cities by their normalized form (without accents for comparison)
+    for city in cities_list:
+        # Create a key without accents for grouping
+        key_without_accents = unicodedata.normalize('NFD', normalize_city_name(city))
+        key_without_accents = ''.join(c for c in key_without_accents if unicodedata.category(c) != 'Mn')
+        
+        if key_without_accents not in city_groups:
+            city_groups[key_without_accents] = []
+        city_groups[key_without_accents].append(city)
+    
+    # Select the best representative for each group (prefer with accents)
+    deduplicated = []
+    for group in city_groups.values():
+        # Normalize all cities in the group
+        normalized_cities = [normalize_city_name(city) for city in group]
+        # Prefer the version with accents (more characters usually means accents)
+        best_city = max(normalized_cities, key=lambda x: (len(x), sum(1 for c in x if ord(c) > 127)))
+        deduplicated.append(best_city)
+    
+    return sorted(deduplicated)
 
 # Response schemas for all endpoints
 class PaginationInfo(BaseSchema):
@@ -187,7 +287,9 @@ async def search_programs_advanced(
             query = query.join(ProgramArea).filter(ProgramArea.area_id == area_id)
         
         if city:
-            filters.append(AcademicProgram.city.ilike(f"%{city}%"))
+            # Use flexible city search conditions
+            city_conditions = create_city_search_conditions(city, AcademicProgram.city)
+            filters.append(or_(*city_conditions))
         
         if department:
             filters.append(AcademicProgram.department.ilike(f"%{department}%"))
@@ -420,12 +522,13 @@ async def list_knowledge_areas(
 async def get_available_filters(db: Session = Depends(get_db)) -> FiltersResponse:
     """Get all available filter options for program search"""
     try:
-        # Get unique cities
+        # Get unique cities with deduplication
         cities_query = db.query(AcademicProgram.city).filter(
             AcademicProgram.city.isnot(None),
             AcademicProgram.is_active == True
         ).distinct().order_by(AcademicProgram.city)
-        cities = [city[0] for city in cities_query.all() if city[0]]
+        raw_cities = [city[0] for city in cities_query.all() if city[0]]
+        cities = deduplicate_cities(raw_cities)
         
         # Get unique departments
         departments_query = db.query(AcademicProgram.department).filter(
