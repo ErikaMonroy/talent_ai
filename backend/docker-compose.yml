@@ -45,11 +45,6 @@ services:
       retries: 3
       start_period: 40s
 
-# Networks
-networks:
-  talentai_network:
-    driver: bridge
-    name: talentai_production_network
 
 # Volumes
 volumes:
@@ -60,3 +55,9 @@ volumes:
   logs_data:
     driver: local
     name: talentai_logs_data_production
+
+networks:
+  default:
+    external: true
+  talentai_network:
+    external: true
