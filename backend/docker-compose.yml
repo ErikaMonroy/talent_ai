@@ -1,72 +1,27 @@
-version: '3.8'
-
 services:
-  # Backend API
   backend:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: talentai_backend
     environment:
-      # Database Configuration
-      DATABASE_URL: postgresql://${DB_POSTGRESDB_USER}:${DB_POSTGRESDB_PASSWORD}@${DB_POSTGRESDB_HOST}:${DB_POSTGRESDB_PORT:-5432}/${DB_POSTGRESDB_DATABASE}
-      POSTGRES_HOST: ${DB_POSTGRESDB_HOST}
-      POSTGRES_PORT: ${DB_POSTGRESDB_PORT:-5432}
-      POSTGRES_DB: ${DB_POSTGRESDB_DATABASE}
-      POSTGRES_USER: ${DB_POSTGRESDB_USER}
-      POSTGRES_PASSWORD: ${DB_POSTGRESDB_PASSWORD}
-      POSTGRES_SCHEMA: ${DB_POSTGRESDB_SCHEMA:-public}
-      POSTGRES_SSL_ENABLED: ${DB_POSTGRESDB_SSL_ENABLED:-false}
-      
-      # Application Configuration
-      BASE_DIR: /app
-      MODELS_DIR: /app/models
-      DATA_DIR: /app/data
-      LOGS_DIR: /app/logs
-      
-      # API Configuration
-      API_V1_STR: /api/v1
-      PROJECT_NAME: TalentAI
-      VERSION: 1.0.0
-      DESCRIPTION: "TalentAI - Academic Program Recommendation System"
-      
-      # Security
-      SECRET_KEY: ${SECRET_KEY:-your-secret-key-change-in-production}
-      ALGORITHM: HS256
-      ACCESS_TOKEN_EXPIRE_MINUTES: 30
-      
-      # Environment
+      # Database Configuration - Only essential variables
+      POSTGRES_SERVER: ${POSTGRES_SERVER:-localhost}
+      POSTGRES_PORT: ${POSTGRES_PORT:-5432}
+      POSTGRES_DB: ${POSTGRES_DB:-talentai_db}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-root}
       ENVIRONMENT: ${ENVIRONMENT:-development}
-      DEBUG: ${DEBUG:-true}
     volumes:
       - ./data:/app/data:ro
-      - models_data:/app/models
-      - logs_data:/app/logs
-      - ./ml_models:/app/ml_models:ro
+      - ./models:/app/models
+      - ./logs:/app/logs
     ports:
-      - "${BACKEND_PORT:-8000}:8000"
-    networks:
-      - default
+      - "8000:8000"
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
-
-# Networks
-networks:
-  default:
-    name: dokploy-network
-    external: true
-
-# Volumes
-volumes:
-  models_data:
-    driver: local
-    name: talentai_models_data
-  
-  logs_data:
-    driver: local
-    name: talentai_logs_data
