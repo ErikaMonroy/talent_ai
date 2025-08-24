@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   backend:
     build:
@@ -24,20 +22,11 @@ services:
     ports:
       - "${PORT:-8000}:${PORT:-8000}"
     networks:
-      - talentai_network
-      - default  # Permite acceso a redes externas
+      - dokploy-network
     restart: unless-stopped
-    #labels:
-    #  - "traefik.enable=true"
-    #  - "traefik.http.routers.talentai-backend.rule=Host(`talentai-backend-fki80q-f6db00-144-126-135-34.traefik.me`)"
-    #  - "traefik.http.routers.talentai-backend.entrypoints=web"
-    #  - "traefik.http.services.talentai-backend.loadbalancer.server.port=8000"
-    #  # HTTPS configuration (optional)
-    #  - "traefik.http.routers.talentai-backend-secure.rule=Host(`talentai-backend-fki80q-f6db00-144-126-135-34.traefik.me`)"
-    #  - "traefik.http.routers.talentai-backend-secure.entrypoints=websecure"
-    #  - "traefik.http.routers.talentai-backend-secure.tls=true"
-    #  - "traefik.http.routers.talentai-backend-secure.tls.certresolver=myresolver"
-    #  - "traefik.http.services.talentai-backend-secure.loadbalancer.server.port=8000"
+    labels:
+      - traefik.docker.network=dokploy-network
+      - traefik.enable=true
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:${PORT:-8000}/api/v1/health"]
       interval: 30s
@@ -57,7 +46,5 @@ volumes:
     name: talentai_logs_data_production
 
 networks:
-  default:
-    external: true
-  talentai_network:
+  dokploy-network:
     external: true
