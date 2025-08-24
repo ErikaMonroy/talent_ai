@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   backend:
     build:
@@ -5,7 +7,7 @@ services:
       dockerfile: Dockerfile
     container_name: talentai_backend
     environment:
-      # Database Configuration - Only essential variables
+      # Database Configuration - External PostgreSQL
       POSTGRES_SERVER: ${POSTGRES_SERVER:-localhost}
       POSTGRES_PORT: ${POSTGRES_PORT:-5432}
       POSTGRES_DB: ${POSTGRES_DB:-talentai_db}
@@ -16,10 +18,14 @@ services:
       PORT: ${PORT:-8000}
     volumes:
       - ./data:/app/data:ro
-      - ./models:/app/models
-      - ./logs:/app/logs
+      - models_data:/app/models
+      - logs_data:/app/logs
+      - ./ml_models:/app/ml_models:ro
     ports:
       - "${PORT:-8000}:${PORT:-8000}"
+    networks:
+      - talentai_network
+      - default  # Permite acceso a redes externas
     restart: unless-stopped
     #labels:
     #  - "traefik.enable=true"
@@ -38,3 +44,20 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
+
+# Networks
+networks:
+  talentai_network:
+    driver: bridge
+    name: talentai_production_network
+    external: true
+
+# Volumes
+volumes:
+  models_data:
+    driver: local
+    name: talentai_models_data_production
+  
+  logs_data:
+    driver: local
+    name: talentai_logs_data_production
