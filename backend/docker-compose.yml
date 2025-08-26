@@ -26,19 +26,6 @@ services:
     networks:
       - dokploy-network
     restart: unless-stopped
-    labels:
-      - traefik.docker.network=dokploy-network
-      - traefik.enable=true
-      - traefik.http.routers.talentai-backend-fki80q-web.rule=Host(`talentai-backend-fki80q-22a901-144-126-135-34.traefik.me`)
-      - traefik.http.routers.talentai-backend-fki80q-web.entrypoints=web
-      - traefik.http.services.talentai-backend-fki80q-web.loadbalancer.server.port=${PORT:-8000}
-      - traefik.http.routers.talentai-backend-fki80q-web.service=talentai-backend-fki80q-web
-      - traefik.http.routers.talentai-backend-fki80q-web.middlewares=redirect-to-https@file
-      - traefik.http.routers.talentai-backend-fki80q-websecure.rule=Host(`talentai-backend-fki80q-22a901-144-126-135-34.traefik.me`)
-      - traefik.http.routers.talentai-backend-fki80q-websecure.entrypoints=websecure
-      - traefik.http.services.talentai-backend-fki80q-websecure.loadbalancer.server.port=${PORT:-8000}
-      - traefik.http.routers.talentai-backend-fki80q-websecure.service=talentai-backend-fki80q-websecure
-      - traefik.http.routers.talentai-backend-fki80q-websecure.tls.certresolver=letsencrypt
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:${PORT:-8000}/api/v1/health"]
       interval: 30s
