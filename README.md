@@ -74,6 +74,31 @@ El proyecto está compuesto por tres componentes principales:
 - Gestión de base de datos PostgreSQL
 - Procesamiento de evaluaciones en tiempo real
 
+## Diseño de Arquitectura
+
+```mermaid
+graph TD
+    A[Navegador del Usuario] --> B[Aplicación Frontend Next.js]
+    B --> C[API Backend TalentAI]
+    B --> D[LocalStorage]
+    C --> E[Base de Datos PostgreSQL]
+    C --> F[Modelos ML - KNN/Neural Network]
+    
+    subgraph "Capa Frontend"
+        B
+        D
+    end
+    
+    subgraph "Capa Backend"
+        C
+        F
+    end
+    
+    subgraph "Capa de Datos"
+        E
+    end
+```
+
 ## 📊 Datos del Sistema
 
 - **2,281 programas académicos** registrados
